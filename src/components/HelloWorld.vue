@@ -34,10 +34,15 @@
     次の問題
   </button>
   <div class="question">
-    <div @click="handleAnswer" class="answer">
+    <div
+      @click="handleAnswer"
+      class="answer"
+      v-for="answer in question.answers"
+      :key="answer"
+    >
       <div class="answer-icon" v-if="showAnswer">
         <CheckCircleIcon
-          v-if="question.a1 === question.collect"
+          v-if="answer === question.collect"
           class="absolute right-0 top-0 h-12 w-12 text-green-600"
         />
         <XCircleIcon
@@ -45,50 +50,7 @@
           class="absolute right-0 top-0 h-12 w-12 text-red-600"
         />
       </div>
-      {{ question.a1 }}
-    </div>
-    <div @click="handleAnswer" class="answer">
-      <div class="answer-icon" v-if="showAnswer">
-        <CheckCircleIcon
-          v-if="question.a2 === question.collect"
-          class="absolute right-0 top-0 h-12 w-12 text-green-600"
-        />
-
-        <XCircleIcon
-          v-else
-          class="absolute right-0 top-0 h-12 w-12 text-red-600"
-        />
-      </div>
-      {{ question.a2 }}
-    </div>
-    <div @click="handleAnswer" class="answer">
-      <div class="answer-icon" v-if="showAnswer">
-        <CheckCircleIcon
-          v-if="question.a3 === question.collect"
-          class="absolute right-0 top-0 h-12 w-12 text-green-600"
-        />
-
-        <XCircleIcon
-          v-else
-          class="absolute right-0 top-0 h-12 w-12 text-red-600"
-        />
-      </div>
-
-      {{ question.a3 }}
-    </div>
-    <div @click="handleAnswer" class="answer">
-      <div class="answer-icon" v-if="showAnswer">
-        <CheckCircleIcon
-          v-if="question.a4 === question.collect"
-          class="absolute right-0 top-0 h-12 w-12 text-green-600"
-        />
-
-        <XCircleIcon
-          v-else
-          class="absolute right-0 top-0 h-12 w-12 text-red-600"
-        />
-      </div>
-      {{ question.a4 }}
+      {{ answer }}
     </div>
   </div>
 </template>

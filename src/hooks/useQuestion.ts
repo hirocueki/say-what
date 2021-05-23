@@ -1,28 +1,27 @@
+import { times, sample, sampleSize } from "lodash";
+const ALPHABETS = (() => {
+  var first = "A".charCodeAt(0);
+  var last = "Z".charCodeAt(0);
+  var result = new Array();
+  for (var i = first; i <= last; i++) {
+    result.push(String.fromCodePoint(i));
+  }
+  return result;
+})();
+
 export type Question = {
-  a1: string;
-  a2: string;
-  a3: string;
-  a4: string;
+  answers: ReadonlyArray<string>;
   collect: string;
 };
 
-export function useQuestion() {
-  const questions: Array<Question> = [
-    {
-      a1: "A",
-      a2: "B",
-      a3: "C",
-      a4: "D",
-      collect: "A",
-    },
-    {
-      a1: "J",
-      a2: "R",
-      a3: "W",
-      a4: "Z",
-      collect: "W",
-    },
-  ];
+const generateQuestion = (): Question => {
+  const answers = sampleSize(ALPHABETS, 4);
+  const collect = sample(answers);
+  return { answers, collect };
+};
+export function useQuestion(size = 10) {
+  const questions: Array<Question> = times(size, generateQuestion);
+  console.log(questions);
 
   return { questions };
 }
