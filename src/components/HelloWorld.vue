@@ -1,70 +1,154 @@
 <template>
-  <h1>{{ msg }}</h1>
+  <button
+    v-if="!showAnswer"
+    class="
+      rounded-full
+      w-24
+      h-24
+      bg-blue-100
+      border-2 border-blue-500
+      p-1
+      mb-8
+      shadow-md
+    "
+    @click="textToSpeech(question.collect)"
+  >
+    問題を聞く
+  </button>
+  <button
+    :disabled="!existsNext"
+    @click="nextQuestion"
+    class="
+      disabled:opacity-50
+      rounded-full
+      w-24
+      h-24
+      bg-yellow-100
+      border-2 border-yellow-500
+      p-1
+      mb-8
+      shadow-md
+    "
+    v-else
+  >
+    次の問題
+  </button>
+  <div class="question">
+    <div @click="handleAnswer" class="answer">
+      <div class="answer-icon" v-if="showAnswer">
+        <CheckCircleIcon
+          v-if="question.a1 === question.collect"
+          class="absolute right-0 top-0 h-12 w-12 text-green-600"
+        />
+        <XCircleIcon
+          v-else
+          class="absolute right-0 top-0 h-12 w-12 text-red-600"
+        />
+      </div>
+      {{ question.a1 }}
+    </div>
+    <div @click="handleAnswer" class="answer">
+      <div class="answer-icon" v-if="showAnswer">
+        <CheckCircleIcon
+          v-if="question.a2 === question.collect"
+          class="absolute right-0 top-0 h-12 w-12 text-green-600"
+        />
 
-  <p>
-    Recommended IDE setup:
-    <a href="https://code.visualstudio.com/" target="_blank">VSCode</a>
-    +
-    <a
-      href="https://marketplace.visualstudio.com/items?itemName=octref.vetur"
-      target="_blank"
-    >
-      Vetur
-    </a>
-    or
-    <a href="https://github.com/johnsoncodehk/volar" target="_blank">Volar</a>
-    (if using
-    <code>&lt;script setup&gt;</code>)
-  </p>
+        <XCircleIcon
+          v-else
+          class="absolute right-0 top-0 h-12 w-12 text-red-600"
+        />
+      </div>
+      {{ question.a2 }}
+    </div>
+    <div @click="handleAnswer" class="answer">
+      <div class="answer-icon" v-if="showAnswer">
+        <CheckCircleIcon
+          v-if="question.a3 === question.collect"
+          class="absolute right-0 top-0 h-12 w-12 text-green-600"
+        />
 
-  <p>See <code>README.md</code> for more information.</p>
+        <XCircleIcon
+          v-else
+          class="absolute right-0 top-0 h-12 w-12 text-red-600"
+        />
+      </div>
 
-  <p>
-    <a href="https://vitejs.dev/guide/features.html" target="_blank">
-      Vite Docs
-    </a>
-    |
-    <a href="https://v3.vuejs.org/" target="_blank">Vue 3 Docs</a>
-  </p>
+      {{ question.a3 }}
+    </div>
+    <div @click="handleAnswer" class="answer">
+      <div class="answer-icon" v-if="showAnswer">
+        <CheckCircleIcon
+          v-if="question.a4 === question.collect"
+          class="absolute right-0 top-0 h-12 w-12 text-green-600"
+        />
 
-  <button @click="count++">count is: {{ count }}</button>
-  <p>
-    Edit
-    <code>components/HelloWorld.vue</code> to test hot module replacement.
-  </p>
+        <XCircleIcon
+          v-else
+          class="absolute right-0 top-0 h-12 w-12 text-red-600"
+        />
+      </div>
+      {{ question.a4 }}
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
-import { ref, defineComponent } from 'vue'
+import { ref, defineComponent, watch, computed } from "vue";
+import { useSpeech } from "../hooks/useSpeech";
+import { useQuestion, Question } from "../hooks/useQuestion";
+import { XCircleIcon, CheckCircleIcon } from "@heroicons/vue/solid";
+
 export default defineComponent({
-  name: 'HelloWorld',
-  props: {
-    msg: {
-      type: String,
-      required: true
-    }
-  },
+  name: "HelloWorld",
+  components: { XCircleIcon, CheckCircleIcon },
+  props: {},
   setup: () => {
-    const count = ref(0)
-    return { count }
-  }
-})
+    const showAnswer = ref(false);
+    const handleAnswer = () => {
+      showAnswer.value = true;
+    };
+    const text = ref("Hello");
+    const { textToSpeech } = useSpeech();
+    const { questions } = useQuestion();
+    const currentQuestionNo = ref(0);
+    const question = ref(questions[currentQuestionNo.value]);
+
+    const existsNext = computed(() => {
+      return currentQuestionNo.value + 1 < questions.length;
+    });
+    const nextQuestion = () => {
+      showAnswer.value = false;
+      currentQuestionNo.value++;
+      question.value = questions[currentQuestionNo.value];
+    };
+
+    return {
+      textToSpeech,
+      text,
+      question,
+      showAnswer,
+      handleAnswer,
+      nextQuestion,
+      existsNext,
+    };
+  },
+});
 </script>
 
 <style scoped>
-a {
-  color: #42b983;
+body {
+  background: #f5f5f5;
 }
-
-label {
-  margin: 0 0.5em;
-  font-weight: bold;
+.question {
+  @apply grid grid-rows-2 grid-flow-col gap-6 h-48 w-48 mx-auto justify-items-center;
 }
-
-code {
-  background-color: #eee;
-  padding: 2px 4px;
-  border-radius: 4px;
-  color: #304455;
+.answer {
+  @apply text-2xl shadow-md;
+  @apply relative flex w-24 h-24 text-gray-900 bg-gray-100 border-2 border-gray-400 rounded-lg justify-center items-center;
+  @apply hover:bg-gray-400 focus:ring-0;
+}
+.answer-icon {
+  @apply absolute -right-5 -top-5 h-12 w-12 bg-white rounded-full shadow-md;
 }
 </style>
