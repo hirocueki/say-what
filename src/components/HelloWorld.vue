@@ -40,12 +40,16 @@
       v-for="answer in question.answers"
       :key="answer"
     >
-      <div class="answer-icon" v-if="showAnswer">
-        <CheckCircleIcon
+      <div class="answer-icon h-12 w-12" v-if="showAnswer">
+        <fa
+          icon="check-circle"
+          size="2x"
           v-if="answer === question.collect"
-          class="absolute right-0 top-0 h-12 w-12 text-green-600"
+          class="absolute right-0 top-0 text-green-600"
         />
-        <XCircleIcon
+        <fa
+          icon="times-circle"
+          size="2x"
           v-else
           class="absolute right-0 top-0 h-12 w-12 text-red-600"
         />
@@ -59,11 +63,11 @@
 import { ref, defineComponent, watch, computed } from "vue";
 import { useSpeech } from "../hooks/useSpeech";
 import { useQuestion, Question } from "../hooks/useQuestion";
-import { XCircleIcon, CheckCircleIcon } from "@heroicons/vue/solid";
+// import { XCircleIcon, CheckCircleIcon } from "@heroicons/vue/solid";
 
 export default defineComponent({
   name: "HelloWorld",
-  components: { XCircleIcon, CheckCircleIcon },
+  // components: { XCircleIcon, CheckCircleIcon },
   props: {},
   setup: () => {
     const showAnswer = ref(false);
